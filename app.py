@@ -238,6 +238,8 @@ if st.button("Design", use_container_width=True):
 
 col1, col2 = st.columns(2)
 with col1:
-    st.caption("Breakwater [documentation](https://breakwater.readthedocs.io/)")
+    st.caption(
+        "Breakwater [documentation](https://breakwater.readthedocs.io/) by [Sander Winkel](https://github.com/sander-w)"
+    )
 with col2:
     st.caption("Streamlit App by [Ryan Alvita](https://github.com/ryanalvita)")
