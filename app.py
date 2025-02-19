@@ -15,6 +15,9 @@ st.subheader("1. Select Breakwater type")
 st.image(
     "https://github.com/Sander-w/breakwater/blob/8eeec8626f6a7549682472328658dda82fb69c99/doc/_figures/breakwater-types.png?raw=true"
 )
+st.caption(
+    "Figure 1.1: Typical cross sections of various types of breakwaters, with the rubble mound types on the left and the monolithic types on the right. (Winkel, 2000. Redrawn from CIRIA, CUR, CETMEF, 2007, p.781)."
+)
 breakwater_type = st.selectbox(
     label="Select a breakwater type",
     options=[
@@ -42,9 +45,15 @@ if breakwater_type == "Caisson":
     st.image(
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/caisson.png?raw=true"
     )
+    st.caption(
+        "Figure 3.2: schematisation of a vertical or composite vertical wall with definitions of variables (Winkel, 2000)."
+    )
 else:
     st.image(
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/rubble-mound.png?raw=true"
+    )
+    st.caption(
+        "Figure 2.1: Schematisation of a rubble mound breakwater with definitions of variables (Winkel, 2000)."
     )
 
 Hm0 = st.number_input("Hm0 -- Spectral wave height [m]", value=2.0)
@@ -78,9 +87,13 @@ if breakwater_type == "Caisson":
     st.image(
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/C.png?raw=true"
     )
+    st.caption("Figure 3.2: Definitions for a rubble mound breakwater (Winkel, 2000).")
 else:
     st.image(
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/RM.png?raw=true"
+    )
+    st.caption(
+        "Figure 3.1: Definitions for a (composite) vertical breakwater (Winkel, 2000)."
     )
 
 limit_Hm0 = Hm0
