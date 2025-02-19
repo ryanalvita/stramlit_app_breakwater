@@ -73,6 +73,7 @@ battjes = bw.BattjesGroenendijk(
 H2_per = battjes.get_Hp(0.02)
 
 # 3 Ultimate Limit State
+st.subheader("3. Define Ultimate Limit State")
 if breakwater_type == "Caisson":
     st.image(
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/C.png?raw=true"
@@ -82,7 +83,6 @@ else:
         "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/RM.png?raw=true"
     )
 
-st.subheader("3. Define Ultimate Limit State")
 limit_Hm0 = Hm0
 limit_q = st.number_input(
     "q -- Mean overtopping discharge per meter structure width [l/s per m]", value=20
