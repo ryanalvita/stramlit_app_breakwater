@@ -4,7 +4,10 @@ from streamlit_extras.capture import stdout
 
 st.title(":rock: Breakwater Design")
 st.write(
-    "A user-friendly app for conceptual breakwater design, powered by the open-source `breakwater` library."
+    "A user-friendly app for conceptual breakwater design, powered by the open-source **breakwater** package."
+)
+st.write(
+    "For more details about definition of parameters, equations, limitations, please check the [documentation](https://breakwater.readthedocs.io/)."
 )
 
 # 1 - Breakwater type
@@ -35,15 +38,24 @@ if breakwater_type == "Concrete Rubble Mound (CRM)":
 
 # 2 Environmental Conditions
 st.subheader("2. Define Envorinmental Conditions")
-Hm0 = st.number_input("Spectral wave height (Hm0) [m]", value=2.0)
+if breakwater_type == "Caisson":
+    st.image(
+        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/caisson.png?raw=true"
+    )
+else:
+    st.image(
+        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/rubble-mound.png?raw=true"
+    )
+
+Hm0 = st.number_input("Hm0 -- Spectral wave height [m]", value=2.0)
 if breakwater_type == "Caisson":
     h, d = st.columns(2)
     with h:
-        h = st.number_input("Water depth (h) [m]", value=15)
+        h = st.number_input("h -- Water depth [m]", value=15)
     with d:
-        d = st.number_input("Caisson draft (d) [m]", value=10)
+        d = st.number_input("d -- Caisson draft [m]", value=10)
 else:
-    h = st.number_input("Water depth (h) [m]", value=15)
+    h = st.number_input("h -- Water depth [m]", value=15)
 
 slope_foreshore_v, slope_foreshore_h = st.columns(2)
 with slope_foreshore_v:
@@ -61,32 +73,41 @@ battjes = bw.BattjesGroenendijk(
 H2_per = battjes.get_Hp(0.02)
 
 # 3 Ultimate Limit State
+if breakwater_type == "Caisson":
+    st.image(
+        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/C.png?raw=true"
+    )
+else:
+    st.image(
+        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/RM.png?raw=true"
+    )
+
 st.subheader("3. Define Ultimate Limit State")
 limit_Hm0 = Hm0
 limit_q = st.number_input(
-    "Mean overtopping discharge per meter structure width (q) [l/s per m]", value=20
+    "q -- Mean overtopping discharge per meter structure width [l/s per m]", value=20
 )
 limit_Hs, limit_Tp = st.columns(2)
 with limit_Hs:
-    limit_Hs = st.number_input("Significant wave height (Hs) [m]", value=2)
+    limit_Hs = st.number_input("Hs -- Significant wave height [m]", value=2)
 with limit_Tp:
-    limit_Tp = st.number_input("Peak wave period (Tp) [s]", value=9.4)
+    limit_Tp = st.number_input("Tp -- Peak wave period [s]", value=9.4)
 
 if breakwater_type == "Rock Rubble Mound (RRM)":
     limit_Nod, limit_Sd = st.columns(2)
     with limit_Nod:
         limit_Nod = st.number_input(
-            "(Optional) Damage number, used in the formula for the toe stability (Nod)",
+            "(Optional) Nod -- Damage number, used in the formula for the toe stability",
             value=5,
         )
     with limit_Sd:
         limit_Sd = st.number_input(
-            "(Optional) Damage number parameter, used in Van der Meer formula (Sd)",
+            "(Optional) Sd -- Damage number parameter, used in Van der Meer formula",
             value=2,
         )
 if breakwater_type == "Concrete Rubble Mound (CRM)":
     limit_Nod = st.number_input(
-        "Damage number, used in the formula for the toe stability (Nod)", value=5
+        "Nod -- Damage number, used in the formula for the toe stability", value=5
     )
 
 if breakwater_type == "Caisson":
@@ -106,61 +127,58 @@ ULS.transform_periods(1)
 
 # 3 Breakwater Configuration
 st.subheader("4. Define Breakwater Configuration")
-if breakwater_type == "Caisson":
-    st.image(
-        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/C.png?raw=true"
-    )
-else:
-    st.image(
-        "https://github.com/Sander-w/breakwater/blob/master/doc/_figures/RM.png?raw=true"
-    )
 rho = st.number_input("Density of the armourstone [kg/m³]", value=2650)
 NEN = bw.RockGrading(rho=rho)
 
 if breakwater_type in ["Rock Rubble Mound (RRM)", "Concrete Rubble Mound (CRM)"]:
     slope_v, slope_h = st.columns(2)
     with slope_v:
-        slope_v = st.number_input("Vertical component of the breakwater slope", value=2)
+        slope_v = st.number_input(
+            "V -- Vertical component of the breakwater slope", value=2
+        )
     with slope_h:
         slope_h = st.number_input(
-            "Horizontal component of the breakwater slope", value=3
+            "H -- Horizontal component of the breakwater slope", value=3
         )
     rho_w, B = st.columns(2)
     with rho_w:
         rho_w = st.number_input("Density of water [kg/m³]", value=1025)
     with B:
-        B = st.number_input("Crest width (B) [m]", value=5.5)
+        B = st.number_input("B -- Crest width [m]", value=5.5)
     N, Dn50_core = st.columns(2)
     with N:
         N = st.number_input(
-            "Number of incident waves at the toe of the breakwater structure (N) [-]",
+            "N -- Number of incident waves at the toe of the breakwater structure [-]",
             value=2100,
         )
     with Dn50_core:
         Dn50_core = st.number_input(
-            "nominal diameter for the stones in the core of the breakwater [m]", value=1
+            "Dn50 -- Nominal diameter for the stones in the core of the breakwater [m]",
+            value=1,
         )
 elif breakwater_type == "Caisson":
     Pc = st.slider(
-        "Ratio of concrete to the total mass of the caisson (Pc)",
+        "Pc -- Ratio of concrete to the total mass of the caisson",
         min_value=0.0,
         max_value=1.0,
         value=0.2,
         step=0.01,
     )
-    rho_c, rho_fill, rho_w = st.columns(3)
+    rho_c, rho_fill = st.columns(2)
     with rho_c:
         rho_c = st.number_input("Density of concrete [kg/m3]", value=2400)
     with rho_fill:
         rho_fill = st.number_input("Density of fill material [kg/m3]", value=1600)
+
+    rho_w, Bm = st.columns(2)
     with rho_w:
         rho_w = st.number_input("Density of water [kg/m3]", value=1025)
-
-    Bm, hb, layers = st.columns(3)
     with Bm:
-        Bm = st.number_input("Width of the berm [m]", value=8)
+        Bm = st.number_input("Bm -- Width of the berm [m]", value=8)
+
+    hb, layers = st.columns(2)
     with hb:
-        hb = st.number_input("Height of the foundation layer [m]", value=2)
+        hb = st.number_input("hb -- Height of the foundation layer [m]", value=2)
     with layers:
         layers = st.number_input("Number of foundation layer [-]", value=2)
     BermMaterial = st.selectbox(
@@ -238,8 +256,6 @@ if st.button("Design", use_container_width=True):
 
 col1, col2 = st.columns(2)
 with col1:
-    st.caption(
-        "Breakwater [documentation](https://breakwater.readthedocs.io/) by [Sander Winkel](https://github.com/sander-w)"
-    )
+    st.caption("Breakwater package by [Sander Winkel](https://github.com/sander-w)")
 with col2:
-    st.caption("Streamlit App by [Ryan Alvita](https://github.com/ryanalvita)")
+    st.caption("Streamlit app by [Ryan Alvita](https://github.com/ryanalvita)")
