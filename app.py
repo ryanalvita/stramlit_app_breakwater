@@ -2,7 +2,7 @@ import streamlit as st
 import breakwater as bw
 from streamlit_extras.capture import stdout
 
-st.title(":new_moon: Breakwater Design")
+st.title(":ocean: Breakwater Design")
 st.write(
     "A user-friendly app for conceptual breakwater design, powered by the open-source **breakwater** package."
 )
